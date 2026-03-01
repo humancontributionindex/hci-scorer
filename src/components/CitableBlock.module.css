@@ -1,0 +1,43 @@
+.wrapper {
+  margin-bottom: 8px;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 16px;
+}
+
+.block {
+  background: var(--secondary);
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+}
+
+.blockText {
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--foreground);
+}
+
+.btnCopy {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+  background: var(--background);
+  border: 1px solid var(--foreground);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btnCopy:hover {
+  background: var(--secondary);
+}
