@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="public/icon.svg" alt="HCI Scorer" width="64" height="64" />
-</p>
+
 
 <h1 align="center">HCI Scorer</h1>
 
