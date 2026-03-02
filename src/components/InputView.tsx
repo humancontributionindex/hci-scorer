@@ -90,11 +90,11 @@ export default function InputView({
           Fragment-level analysis is a preliminary estimate. The rubric is
           open-source and inspectable at{" "}
           <a
-            href="https://github.com/humancontributionindex/hci-framework"
+            href=""
             target="_blank"
             rel="noopener noreferrer"
           >
-            github.com/humancontributionindex/hci-framework
+            here
           </a>
           . Your text is analyzed in real time and never stored.
         </p>
