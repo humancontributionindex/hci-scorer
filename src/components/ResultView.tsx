@@ -6,7 +6,8 @@ import DimensionCard from "./DimensionCard";
 import CitableBlock from "./CitableBlock";
 import EmailCapture from "./EmailCapture";
 import FeedbackCapture from "./FeedbackCapture";
-import styles from "./ResultView.module.css";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface ResultViewProps {
   result: AssessmentResponse;
@@ -25,29 +26,35 @@ export default function ResultView({
     <div>
       {/* Assessment Result */}
       <section>
-        <p className={styles.sectionLabel}>Assessment Result</p>
-        <div className={styles.scoreRow}>
-          <span className={styles.scoreRange}>
+        <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+          Assessment Result
+        </p>
+        <div className="flex items-baseline gap-2 mb-3">
+          <span className="text-4xl font-semibold text-foreground max-[480px]:text-[1.75rem]">
             {hci.low}&ndash;{hci.high}
           </span>
-          <span className={styles.scoreMax}>/5.0</span>
+          <span className="text-xl text-muted-foreground">/5.0</span>
         </div>
-        <p className={styles.confidenceText}>
+        <p className="font-sans text-sm text-muted-foreground mb-1">
           {confidence.text} &mdash; {confidence.desc}
         </p>
-        <p className={styles.dimensionsAssessed}>
+        <p className="font-sans text-sm text-muted-foreground mb-4">
           {hci.assessed} of {hci.total} dimensions assessed from this fragment
         </p>
         {result.overall_note && (
-          <p className={styles.overallNote}>{result.overall_note}</p>
+          <p className="text-base leading-[1.7] text-foreground">
+            {result.overall_note}
+          </p>
         )}
       </section>
 
-      <hr className={styles.divider} />
+      <Separator className="my-8" />
 
       {/* Dimension Breakdown */}
-      <section className={styles.section}>
-        <p className={styles.sectionLabel}>Dimension Breakdown</p>
+      <section className="mb-2">
+        <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+          Dimension Breakdown
+        </p>
         {DIMENSIONS.map((dim, i) => {
           const d = result.dimensions[dim.key];
           if (!d) return null;
@@ -62,14 +69,14 @@ export default function ResultView({
         })}
       </section>
 
-      <hr className={styles.divider} />
+      <Separator className="my-8" />
 
       {/* Citable Block */}
       <section>
         <CitableBlock hci={hci} result={result} />
       </section>
 
-      <hr className={styles.divider} />
+      <Separator className="my-8" />
 
       {/* Email Capture */}
       <section>
@@ -77,25 +84,34 @@ export default function ResultView({
       </section>
 
       {/* Feedback */}
-      <section className={styles.engagementSection}>
+      <section className="mt-8">
         <FeedbackCapture />
       </section>
 
-      <hr className={styles.divider} />
+      <Separator className="my-8" />
 
       {/* Action Buttons */}
-      <div className={styles.actions}>
-        <button className={styles.btnSecondary} onClick={onReset}>
-          Assess another text
-        </button>
-        <a
-          href="https://github.com/humancontributionindex/hci-framework"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.btnSecondary}
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <Button
+          variant="outline"
+          className="border-foreground hover:bg-secondary text-center"
+          onClick={onReset}
         >
-          View scoring rubric on GitHub
-        </a>
+          Assess another text
+        </Button>
+        <Button
+          variant="outline"
+          className="border-foreground hover:bg-secondary text-center"
+          asChild
+        >
+          <a
+            href="https://github.com/humancontributionindex/hci-framework"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View scoring rubric on GitHub
+          </a>
+        </Button>
       </div>
     </div>
   );

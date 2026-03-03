@@ -1,5 +1,5 @@
 import { DimensionDef, DimensionResult } from "@/lib/types";
-import styles from "./DimensionCard.module.css";
+import { cn } from "@/lib/utils";
 
 interface DimensionCardProps {
   dimension: DimensionDef;
@@ -16,28 +16,39 @@ export default function DimensionCard({
   const anchorText = scored ? dimension.anchors[result.score!] : null;
 
   return (
-    <div className={isLast ? styles.card : styles.cardBordered}>
-      <div className={styles.header}>
-        <span className={styles.name}>{dimension.name}</span>
-        <span className={scored ? styles.score : styles.scoreNA}>
+    <div className={cn("py-5", !isLast && "border-b border-border")}>
+      <div className="flex items-baseline justify-between mb-2">
+        <span className="font-sans text-sm font-semibold text-foreground">
+          {dimension.name}
+        </span>
+        <span
+          className={cn(
+            "font-sans text-sm font-semibold",
+            scored ? "text-foreground" : "text-muted-foreground"
+          )}
+        >
           {scored ? `${result.score}/5` : "N/A"}
         </span>
       </div>
 
-      <p className={styles.meta}>
+      <p className="font-sans text-xs text-muted-foreground mb-3">
         Weight: {dimension.weight * 100}% &mdash; {dimension.short}
       </p>
 
       {scored && result.evidence && (
         <div>
-          <p className={styles.evidenceLabel}>Evidence:</p>
-          <p className={styles.evidence}>{result.evidence}</p>
+          <p className="font-sans text-xs font-semibold text-foreground mb-1">
+            Evidence:
+          </p>
+          <p className="text-sm leading-[1.7] text-foreground mb-3">
+            {result.evidence}
+          </p>
         </div>
       )}
 
       {scored && anchorText && (
-        <p className={styles.anchor}>
-          <span className={styles.anchorBold}>
+        <p className="font-sans text-xs text-muted-foreground">
+          <span className="font-semibold">
             Rubric anchor ({result.score}/5):
           </span>{" "}
           {anchorText}
@@ -45,7 +56,7 @@ export default function DimensionCard({
       )}
 
       {!scored && result.not_assessable && (
-        <p className={styles.notAssessable}>
+        <p className="text-sm italic text-muted-foreground leading-[1.7]">
           Not assessable from this fragment: {result.not_assessable}
         </p>
       )}

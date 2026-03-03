@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { HCIScore, AssessmentResponse } from "@/lib/types";
-import styles from "./CitableBlock.module.css";
+import { Button } from "@/components/ui/button";
 
 interface CitableBlockProps {
   hci: HCIScore;
@@ -22,14 +22,23 @@ export default function CitableBlock({ hci, result }: CitableBlockProps) {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <p className={styles.label}>Citable Assessment Block</p>
-      <div className={styles.block}>
-        <p className={styles.blockText}>{citableText}</p>
+    <div className="mb-2">
+      <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+        Citable Assessment Block
+      </p>
+      <div className="bg-secondary p-5 rounded-lg mb-3">
+        <p className="text-sm italic leading-[1.7] text-foreground">
+          {citableText}
+        </p>
       </div>
-      <button className={styles.btnCopy} onClick={handleCopy}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="border-foreground hover:bg-secondary"
+        onClick={handleCopy}
+      >
         {copied ? "Copied" : "Copy to clipboard"}
-      </button>
+      </Button>
     </div>
   );
 }

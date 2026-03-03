@@ -1,7 +1,11 @@
 "use client";
 
 import { MIN_TEXT_LENGTH } from "@/lib/constants";
-import styles from "./InputView.module.css";
+import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface InputViewProps {
   text: string;
@@ -27,22 +31,30 @@ export default function InputView({
 
   return (
     <div>
-      <div className={styles.section}>
-        <label htmlFor="research-text" className={styles.label}>
+      <div className="mb-6">
+        <label
+          htmlFor="research-text"
+          className="block font-sans text-sm font-semibold text-foreground mb-1"
+        >
           Paste your research text
         </label>
-        <p className={styles.hint}>
+        <p className="font-sans text-xs text-muted-foreground mb-2">
           This can be an abstract, a chapter section, or any passage you wish to
           evaluate.
         </p>
-        <textarea
+        <Textarea
           id="research-text"
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
-          className={styles.textarea}
+          className="min-h-[200px] font-serif text-base leading-[1.7] resize-y"
           placeholder="Paste your text here..."
         />
-        <p className={isShort ? styles.charCountWarning : styles.charCount}>
+        <p
+          className={cn(
+            "font-sans text-xs text-right mt-1 min-h-[1.2em]",
+            isShort ? "text-destructive" : "text-muted-foreground"
+          )}
+        >
           {charCount > 0 && (
             <>
               {charCount} character{charCount !== 1 ? "s" : ""}
@@ -52,48 +64,47 @@ export default function InputView({
         </p>
       </div>
 
-      <div className={styles.section}>
-        <label htmlFor="decision" className={styles.label}>
+      <div className="mb-6">
+        <label
+          htmlFor="decision"
+          className="block font-sans text-sm font-semibold text-foreground mb-1"
+        >
           What was your main intellectual decision in this section?
-          <span className={styles.optionalTag}>Optional</span>
+          <span className="font-normal text-muted-foreground ml-1.5 text-xs">
+            Optional
+          </span>
         </label>
-        <p className={styles.hint}>
+        <p className="font-sans text-xs text-muted-foreground mb-2">
           Providing context helps the rubric assess contribution dimensions more
           accurately.
         </p>
-        <input
+        <Input
           id="decision"
           type="text"
           value={reflection}
           onChange={(e) => onReflectionChange(e.target.value)}
-          className={styles.reflectionInput}
+          className="font-sans text-sm"
           placeholder="e.g., I chose to frame the problem as a question of institutional trust rather than individual behavior."
         />
       </div>
 
-      <div className={styles.submitSection}>
-        <button
-          className={styles.btnPrimary}
-          onClick={onSubmit}
-          disabled={isLoading}
-        >
+      <div className="mt-6">
+        <Button onClick={onSubmit} disabled={isLoading}>
           Run HCI Assessment
-        </button>
-        {error && <p className={styles.error}>{error}</p>}
+        </Button>
+        {error && (
+          <p className="font-sans text-sm text-destructive mt-3">{error}</p>
+        )}
       </div>
 
-      <hr className={styles.divider} />
+      <Separator className="my-8" />
 
       <div>
-        <p className={styles.methodologyNote}>
+        <p className="font-sans text-xs text-muted-foreground leading-relaxed [&_a]:underline [&_a]:transition-colors hover:[&_a]:text-foreground">
           This tool applies the HCI scoring rubric to your text fragment.
           Fragment-level analysis is a preliminary estimate. The rubric is
           open-source and inspectable at{" "}
-          <a
-            href=""
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="" target="_blank" rel="noopener noreferrer">
             here
           </a>
           . Your text is analyzed in real time and never stored.

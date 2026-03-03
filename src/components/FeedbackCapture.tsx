@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./FeedbackCapture.module.css";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function FeedbackCapture() {
   const [feedback, setFeedback] = useState("");
@@ -27,7 +28,7 @@ export default function FeedbackCapture() {
 
   if (done) {
     return (
-      <p className={styles.success}>
+      <p className="font-sans text-sm text-success">
         Thank you &mdash; your feedback contributes to the open-source HCI
         framework.
       </p>
@@ -36,23 +37,26 @@ export default function FeedbackCapture() {
 
   return (
     <div>
-      <p className={styles.label}>Help improve the HCI</p>
-      <div className={styles.row}>
-        <input
-          className={styles.input}
+      <p className="font-sans text-sm font-semibold text-foreground mb-1">
+        Help improve the HCI
+      </p>
+      <div className="flex gap-2 mt-2 max-[480px]:flex-col">
+        <Input
           type="text"
           placeholder="Your feedback or suggestion..."
+          className="flex-1 font-sans text-sm"
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
-        <button
-          className={styles.btn}
+        <Button
+          variant="outline"
+          className="border-foreground hover:bg-secondary whitespace-nowrap"
           onClick={handleSubmit}
           disabled={submitting}
         >
           Submit
-        </button>
+        </Button>
       </div>
     </div>
   );

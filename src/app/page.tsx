@@ -7,14 +7,13 @@ import LoadingState from "@/components/LoadingState";
 import ResultView from "@/components/ResultView";
 import Counter from "@/components/Counter";
 import Footer from "@/components/Footer";
-import styles from "./page.module.css";
 
 export default function Home() {
   const assessment = useAssessment();
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
+    <main className="min-h-screen px-5 pt-12 pb-20 max-[480px]:px-4 max-[480px]:pt-8 max-[480px]:pb-12">
+      <div className="max-w-content mx-auto">
         <Header />
 
         {(assessment.appState === "input" ||

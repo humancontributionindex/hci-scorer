@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./EmailCapture.module.css";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function EmailCapture() {
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ export default function EmailCapture() {
 
   if (done) {
     return (
-      <p className={styles.success}>
+      <p className="font-sans text-sm text-success">
         You&apos;re on the early access list.
       </p>
     );
@@ -35,25 +36,26 @@ export default function EmailCapture() {
 
   return (
     <div>
-      <p className={styles.label}>
+      <p className="font-sans text-sm font-semibold text-foreground mb-1">
         Full-document HCI assessment &mdash; coming soon
       </p>
-      <div className={styles.row}>
-        <input
-          className={styles.input}
+      <div className="flex gap-2 mt-2 max-[480px]:flex-col">
+        <Input
           type="email"
           placeholder="your@email.edu"
+          className="flex-1 font-sans text-sm"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
-        <button
-          className={styles.btn}
+        <Button
+          variant="outline"
+          className="border-foreground hover:bg-secondary whitespace-nowrap"
           onClick={handleSubmit}
           disabled={submitting}
         >
           Notify me
-        </button>
+        </Button>
       </div>
     </div>
   );
