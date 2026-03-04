@@ -19,10 +19,10 @@ export default function Home() {
         {(assessment.appState === "input" ||
           assessment.appState === "error") && (
           <InputView
+            researchField={assessment.researchField}
+            onResearchFieldChange={assessment.setResearchField}
             text={assessment.text}
             onTextChange={assessment.setText}
-            reflection={assessment.reflection}
-            onReflectionChange={assessment.setReflection}
             onSubmit={assessment.runAssessment}
             error={assessment.error}
             isLoading={false}

@@ -8,20 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 interface InputViewProps {
+  researchField: string;
+  onResearchFieldChange: (field: string) => void;
   text: string;
   onTextChange: (text: string) => void;
-  reflection: string;
-  onReflectionChange: (reflection: string) => void;
   onSubmit: () => void;
   error: string | null;
   isLoading: boolean;
 }
 
 export default function InputView({
+  researchField,
+  onResearchFieldChange,
   text,
   onTextChange,
-  reflection,
-  onReflectionChange,
   onSubmit,
   error,
   isLoading,
@@ -31,6 +31,26 @@ export default function InputView({
 
   return (
     <div>
+      <div className="mb-6">
+        <label
+          htmlFor="research-field"
+          className="block font-sans text-sm font-semibold text-foreground mb-1"
+        >
+          Research field
+        </label>
+        <p className="font-sans text-xs text-muted-foreground mb-2">
+          e.g., Cognitive Psychology, Machine Learning, Legal Studies
+        </p>
+        <Input
+          id="research-field"
+          type="text"
+          value={researchField}
+          onChange={(e) => onResearchFieldChange(e.target.value)}
+          className="font-sans text-sm"
+          placeholder="Enter your research field..."
+        />
+      </div>
+
       <div className="mb-6">
         <label
           htmlFor="research-text"
@@ -62,30 +82,6 @@ export default function InputView({
             </>
           )}
         </p>
-      </div>
-
-      <div className="mb-6">
-        <label
-          htmlFor="decision"
-          className="block font-sans text-sm font-semibold text-foreground mb-1"
-        >
-          What was your main intellectual decision in this section?
-          <span className="font-normal text-muted-foreground ml-1.5 text-xs">
-            Optional
-          </span>
-        </label>
-        <p className="font-sans text-xs text-muted-foreground mb-2">
-          Providing context helps the rubric assess contribution dimensions more
-          accurately.
-        </p>
-        <Input
-          id="decision"
-          type="text"
-          value={reflection}
-          onChange={(e) => onReflectionChange(e.target.value)}
-          className="font-sans text-sm"
-          placeholder="e.g., I chose to frame the problem as a question of institutional trust rather than individual behavior."
-        />
       </div>
 
       <div className="mt-6">
