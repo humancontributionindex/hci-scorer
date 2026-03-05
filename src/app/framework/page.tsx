@@ -18,38 +18,24 @@ export const metadata: Metadata = {
   },
 };
 
-const WEIGHTS_TABLE: { name: string; weight: string; measures: string }[] = [
-  {
-    name: "Conceptual Direction",
-    weight: "25%",
-    measures:
-      "Did the researcher identify the problem, frame the questions, and direct the inquiry?",
-  },
-  {
-    name: "Creative Synthesis",
-    weight: "25%",
-    measures:
-      "Are the connections and insights non-obvious? Do they draw on cross-domain expertise?",
-  },
-  {
-    name: "Critical Judgment",
-    weight: "20%",
-    measures:
-      "Did the researcher evaluate alternatives, weigh evidence, and acknowledge limitations?",
-  },
-  {
-    name: "Ethical Reasoning",
-    weight: "15%",
-    measures:
-      "Did the researcher navigate ethical considerations and take responsibility for impact?",
-  },
-  {
-    name: "Scholarly Voice",
-    weight: "15%",
-    measures:
-      "Is there a distinctive intellectual perspective and authentic argumentation?",
-  },
-];
+const DIMENSION_MEASURES: Record<string, string> = {
+  conceptual_direction:
+    "Did the researcher identify the problem, frame the questions, and direct the inquiry?",
+  creative_synthesis:
+    "Are the connections and insights non-obvious? Do they draw on cross-domain expertise?",
+  critical_judgment:
+    "Did the researcher evaluate alternatives, weigh evidence, and acknowledge limitations?",
+  ethical_reasoning:
+    "Did the researcher navigate ethical considerations and take responsibility for impact?",
+  scholarly_voice:
+    "Is there a distinctive intellectual perspective and authentic argumentation?",
+};
+
+const WEIGHTS_TABLE = DIMENSIONS.map((dim) => ({
+  name: dim.name,
+  weight: `${Math.round(dim.weight * 100)}%`,
+  measures: DIMENSION_MEASURES[dim.key],
+}));
 
 const AI_DEPENDENCY_TABLE: {
   range: string;
