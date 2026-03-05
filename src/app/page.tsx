@@ -1,12 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useAssessment } from "@/hooks/useAssessment";
 import Header from "@/components/Header";
 import InputView from "@/components/InputView";
 import LoadingState from "@/components/LoadingState";
-import ResultView from "@/components/ResultView";
 import Counter from "@/components/Counter";
 import Footer from "@/components/Footer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+
+const ResultView = dynamic(() => import("@/components/ResultView"), {
+  ssr: false,
+});
 
 export default function Home() {
   const assessment = useAssessment();
@@ -19,10 +24,10 @@ export default function Home() {
         {(assessment.appState === "input" ||
           assessment.appState === "error") && (
           <InputView
+            researchField={assessment.researchField}
+            onResearchFieldChange={assessment.setResearchField}
             text={assessment.text}
             onTextChange={assessment.setText}
-            reflection={assessment.reflection}
-            onReflectionChange={assessment.setReflection}
             onSubmit={assessment.runAssessment}
             error={assessment.error}
             isLoading={false}
@@ -31,17 +36,16 @@ export default function Home() {
 
         {assessment.appState === "loading" && <LoadingState />}
 
-        {assessment.appState === "result" &&
-          assessment.result &&
-          assessment.hci &&
-          assessment.confidence && (
+        {assessment.appState === "result" && assessment.result && (
+          <ErrorBoundary>
             <ResultView
               result={assessment.result}
               hci={assessment.hci}
               confidence={assessment.confidence}
               onReset={assessment.reset}
             />
-          )}
+          </ErrorBoundary>
+        )}
 
         <Counter count={assessment.globalCount} />
         <Footer />

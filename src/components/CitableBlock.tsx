@@ -23,9 +23,9 @@ export default function CitableBlock({ hci, result }: CitableBlockProps) {
 
   return (
     <div className="mb-2">
-      <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+      <h2 className="font-sans text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
         Citable Assessment Block
-      </p>
+      </h2>
       <div className="bg-secondary p-5 rounded-lg mb-3">
         <p className="text-sm italic leading-[1.7] text-foreground">
           {citableText}

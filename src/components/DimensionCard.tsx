@@ -18,9 +18,9 @@ export default function DimensionCard({
   return (
     <div className={cn("py-5", !isLast && "border-b border-border")}>
       <div className="flex items-baseline justify-between mb-2">
-        <span className="font-sans text-sm font-semibold text-foreground">
+        <h3 className="font-sans text-base font-semibold text-foreground">
           {dimension.name}
-        </span>
+        </h3>
         <span
           className={cn(
             "font-sans text-sm font-semibold",

@@ -10,10 +10,16 @@ export function computeHCI(
 
   for (const dim of DIMENSIONS) {
     const result = dimensions[dim.key];
-    if (result && result.score !== null) {
-      weightedSum += result.score * dim.weight;
-      totalWeight += dim.weight;
-      assessedCount++;
+    if (result && result.score != null) {
+      const numScore =
+        typeof result.score === "string"
+          ? parseFloat(result.score)
+          : result.score;
+      if (!isNaN(numScore)) {
+        weightedSum += numScore * dim.weight;
+        totalWeight += dim.weight;
+        assessedCount++;
+      }
     }
   }
 

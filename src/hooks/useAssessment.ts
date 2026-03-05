@@ -6,8 +6,8 @@ import { computeHCI, confidenceLabel } from "@/lib/compute-hci";
 import { MIN_TEXT_LENGTH } from "@/lib/constants";
 
 export function useAssessment() {
+  const [researchField, setResearchField] = useState("");
   const [text, setText] = useState("");
-  const [reflection, setReflection] = useState("");
   const [appState, setAppState] = useState<AppState>("input");
   const [result, setResult] = useState<AssessmentResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +21,10 @@ export function useAssessment() {
   }, []);
 
   const runAssessment = useCallback(async () => {
+    if (!researchField.trim()) {
+      setError("Please enter your research field.");
+      return;
+    }
     if (text.trim().length < MIN_TEXT_LENGTH) {
       setError(
         `Please paste at least ${MIN_TEXT_LENGTH} characters of research text.`
@@ -37,7 +41,7 @@ export function useAssessment() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: text.trim(),
-          reflection: reflection.trim() || undefined,
+          researchField: researchField.trim(),
         }),
       });
 
@@ -56,11 +60,11 @@ export function useAssessment() {
       setError(message);
       setAppState("input");
     }
-  }, [text, reflection]);
+  }, [text, researchField]);
 
   const reset = useCallback(() => {
+    setResearchField("");
     setText("");
-    setReflection("");
     setResult(null);
     setError(null);
     setAppState("input");
@@ -72,10 +76,10 @@ export function useAssessment() {
     : null;
 
   return {
+    researchField,
+    setResearchField,
     text,
     setText,
-    reflection,
-    setReflection,
     appState,
     result,
     error,
