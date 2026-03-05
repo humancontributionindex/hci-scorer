@@ -36,9 +36,9 @@ export default function EmailCapture() {
 
   return (
     <div>
-      <p className="font-sans text-sm font-semibold text-foreground mb-1">
+      <h2 className="font-sans text-base font-semibold text-foreground mb-1">
         Full-document HCI assessment &mdash; coming soon
-      </p>
+      </h2>
       <div className="flex gap-2 mt-2 max-[480px]:flex-col">
         <Input
           type="email"

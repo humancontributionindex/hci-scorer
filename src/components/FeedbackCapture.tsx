@@ -37,9 +37,9 @@ export default function FeedbackCapture() {
 
   return (
     <div>
-      <p className="font-sans text-sm font-semibold text-foreground mb-1">
+      <h2 className="font-sans text-base font-semibold text-foreground mb-1">
         Help improve the HCI
-      </p>
+      </h2>
       <div className="flex gap-2 mt-2 max-[480px]:flex-col">
         <Input
           type="text"

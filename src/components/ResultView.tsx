@@ -3,6 +3,8 @@
 import { DIMENSIONS } from "@/lib/constants";
 import { AssessmentResponse, HCIScore, ConfidenceInfo } from "@/lib/types";
 import DimensionCard from "./DimensionCard";
+import DimensionRadarChart from "./DimensionRadarChart";
+import ErrorBoundary from "./ErrorBoundary";
 import CitableBlock from "./CitableBlock";
 import EmailCapture from "./EmailCapture";
 import FeedbackCapture from "./FeedbackCapture";
@@ -11,8 +13,8 @@ import { Separator } from "@/components/ui/separator";
 
 interface ResultViewProps {
   result: AssessmentResponse;
-  hci: HCIScore;
-  confidence: ConfidenceInfo;
+  hci: HCIScore | null;
+  confidence: ConfidenceInfo | null;
   onReset: () => void;
 }
 
@@ -26,21 +28,32 @@ export default function ResultView({
     <div>
       {/* Assessment Result */}
       <section>
-        <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+        <h2 className="font-sans text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
           Assessment Result
-        </p>
-        <div className="flex items-baseline gap-2 mb-3">
-          <span className="text-4xl font-semibold text-foreground max-[480px]:text-[1.75rem]">
-            {hci.low}&ndash;{hci.high}
-          </span>
-          <span className="text-xl text-muted-foreground">/5.0</span>
-        </div>
-        <p className="font-sans text-sm text-muted-foreground mb-1">
-          {confidence.text} &mdash; {confidence.desc}
-        </p>
-        <p className="font-sans text-sm text-muted-foreground mb-4">
-          {hci.assessed} of {hci.total} dimensions assessed from this fragment
-        </p>
+        </h2>
+        {hci ? (
+          <>
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="text-4xl font-semibold text-foreground max-[480px]:text-[1.75rem]">
+                {hci.low}&ndash;{hci.high}
+              </span>
+              <span className="text-xl text-muted-foreground">/5.0</span>
+            </div>
+            {confidence && (
+              <p className="font-sans text-sm text-muted-foreground mb-1">
+                {confidence.text} &mdash; {confidence.desc}
+              </p>
+            )}
+            <p className="font-sans text-sm text-muted-foreground mb-4">
+              {hci.assessed} of {hci.total} dimensions assessed from this
+              fragment
+            </p>
+          </>
+        ) : (
+          <p className="font-sans text-sm text-muted-foreground mb-4">
+            Score could not be computed &mdash; see individual dimensions below.
+          </p>
+        )}
         {result.overall_note && (
           <p className="text-base leading-[1.7] text-foreground">
             {result.overall_note}
@@ -52,9 +65,18 @@ export default function ResultView({
 
       {/* Dimension Breakdown */}
       <section className="mb-2">
-        <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+        <h2 className="font-sans text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
           Dimension Breakdown
-        </p>
+        </h2>
+        <ErrorBoundary
+          fallback={
+            <p className="text-xs text-muted-foreground italic mb-4">
+              Radar chart could not be displayed.
+            </p>
+          }
+        >
+          <DimensionRadarChart dimensions={result.dimensions} />
+        </ErrorBoundary>
         {DIMENSIONS.map((dim, i) => {
           const d = result.dimensions[dim.key];
           if (!d) return null;
@@ -72,11 +94,13 @@ export default function ResultView({
       <Separator className="my-8" />
 
       {/* Citable Block */}
-      <section>
-        <CitableBlock hci={hci} result={result} />
-      </section>
+      {hci && (
+        <section>
+          <CitableBlock hci={hci} result={result} />
+        </section>
+      )}
 
-      <Separator className="my-8" />
+      {hci && <Separator className="my-8" />}
 
       {/* Email Capture */}
       <section>
