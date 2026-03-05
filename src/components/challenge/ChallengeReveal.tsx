@@ -43,12 +43,13 @@ export default function ChallengeReveal({
   const insight = getInsight(userFive, aiFive, dimension?.name ?? "this dimension");
 
   const gap = userFive - aiFive;
+  const gapAbs = Math.abs(gap).toFixed(1);
   const gapLabel =
     Math.abs(gap) <= 0.5
       ? "Aligned"
       : gap > 0
-        ? `+${gap.toFixed(1)} higher`
-        : `${gap.toFixed(1)} lower`;
+        ? `+${gapAbs} higher`
+        : `${gapAbs} lower`;
 
   return (
     <div className="flex flex-col">

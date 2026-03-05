@@ -57,6 +57,7 @@ export default function ChallengeHook({
             <button
               key={opt}
               type="button"
+              aria-pressed={field === opt}
               onClick={() => handlePickField(opt)}
               className={cn(
                 "font-sans text-sm px-4 py-2 rounded-full border transition-all active:scale-95",

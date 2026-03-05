@@ -70,6 +70,9 @@ export default function ChallengeProfile({
       const aiAvg =
         dimRatings.reduce((sum, r) => {
           const p = passages.find((pp) => pp.id === r.passageId);
+          if (!p) {
+            console.warn(`[ChallengeProfile] No passage found for id "${r.passageId}" — using default aiScore 3`);
+          }
           return sum + (p?.aiScore ?? 3);
         }, 0) / dimRatings.length;
 
@@ -195,7 +198,7 @@ export default function ChallengeProfile({
                 <p className="font-sans text-xs text-muted-foreground mt-2 pl-10">
                   {diff > 0
                     ? `+${diff.toFixed(1)} higher than the AI`
-                    : `${diff.toFixed(1)} lower than the AI`}
+                    : `${Math.abs(diff).toFixed(1)} lower than the AI`}
                 </p>
               )}
             </div>
@@ -275,15 +278,10 @@ export default function ChallengeProfile({
               const strongest = summaries.length > 0
                 ? summaries.reduce((a, b) => (a.userAvg > b.userAvg ? a : b))
                 : null;
-              const weakest = summaries.length > 0
-                ? summaries.reduce((a, b) =>
-                    Math.abs(a.userAvg - a.aiAvg) > Math.abs(b.userAvg - b.aiAvg) ? a : b
-                  )
-                : null;
-              const dir = weakest
-                ? weakest.userAvg < weakest.aiAvg ? "tougher" : "softer"
+              const dir = mostDivergent
+                ? mostDivergent.userAvg < mostDivergent.aiAvg ? "tougher" : "softer"
                 : "";
-              const text = `I took the HCI Challenge \u2014 I'm a ${strongest?.name ?? "research"} hawk, ${dir} than AI on ${weakest?.name?.toLowerCase() ?? "key dimensions"}. Test your research instinct: humancontributionindex.com/challenge`;
+              const text = `I took the HCI Challenge \u2014 I'm a ${strongest?.name ?? "research"} hawk, ${dir} than AI on ${mostDivergent?.name?.toLowerCase() ?? "key dimensions"}. Test your research instinct: humancontributionindex.com/challenge`;
               window.open(
                 `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`,
                 "_blank",
@@ -301,12 +299,8 @@ export default function ChallengeProfile({
           <button
             type="button"
             onClick={() => {
-              const strongest = summaries.length > 0
-                ? summaries.reduce((a, b) => (a.userAvg > b.userAvg ? a : b))
-                : null;
-              const text = `Tested my ability to assess human intellectual contribution in research against AI scoring. My research instinct profile: ${strongest?.name ?? "Balanced"}. Try the HCI Challenge: humancontributionindex.com/challenge`;
               window.open(
-                `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://humancontributionindex.com/challenge")}&summary=${encodeURIComponent(text)}`,
+                `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://humancontributionindex.com/challenge")}`,
                 "_blank",
                 "noopener,noreferrer"
               );
@@ -340,7 +334,7 @@ export default function ChallengeProfile({
                   const isCurrentUser = savedName && entry.name === savedName;
                   return (
                     <tr
-                      key={`${entry.name}-${rank}`}
+                      key={`${entry.name}-${i}`}
                       className={cn(
                         "border-b border-border",
                         isCurrentUser

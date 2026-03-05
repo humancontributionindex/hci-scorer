@@ -137,7 +137,7 @@ export default function ChallengeRound({
             value={sliderValue}
             onChange={handleSliderChange}
             className={cn(
-              "challenge-slider w-full h-2 appearance-none bg-muted rounded-full cursor-pointer outline-none relative z-10",
+              "challenge-slider w-full h-2 appearance-none bg-muted rounded-full cursor-pointer outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background relative z-10",
               !hasMoved && "challenge-slider--hidden-thumb"
             )}
             aria-label={`Score from 0 to 100. ${hasMoved ? `Current value: ${sliderValue}` : "Click the track to set your score."}`}
