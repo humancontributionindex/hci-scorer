@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { MIN_TEXT_LENGTH } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
@@ -84,12 +85,19 @@ export default function InputView({
         </p>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <Button onClick={onSubmit} disabled={isLoading}>
           Run HCI Assessment
         </Button>
+        <Button
+          variant="outline"
+          className="border-foreground hover:bg-secondary"
+          asChild
+        >
+          <Link href="/framework">View the scoring framework</Link>
+        </Button>
         {error && (
-          <p className="font-sans text-sm text-destructive mt-3">{error}</p>
+          <p className="font-sans text-sm text-destructive mt-3 sm:self-center">{error}</p>
         )}
       </div>
 
@@ -99,10 +107,10 @@ export default function InputView({
         <p className="font-sans text-xs text-muted-foreground leading-relaxed [&_a]:underline [&_a]:transition-colors hover:[&_a]:text-foreground">
           This tool applies the HCI scoring rubric to your text fragment.
           Fragment-level analysis is a preliminary estimate. The rubric is
-          open-source and inspectable at{" "}
-          <a href="" target="_blank" rel="noopener noreferrer">
+          open-source and inspectable{" "}
+          <Link href="/framework">
             here
-          </a>
+          </Link>
           . Your text is analyzed in real time and never stored.
         </p>
       </div>
