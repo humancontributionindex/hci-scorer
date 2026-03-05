@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { DIMENSIONS } from "@/lib/constants";
 import { AssessmentResponse, HCIScore, ConfidenceInfo } from "@/lib/types";
 import DimensionCard from "./DimensionCard";
@@ -128,13 +129,7 @@ export default function ResultView({
           className="border-foreground hover:bg-secondary text-center"
           asChild
         >
-          <a
-            href="https://github.com/humancontributionindex/hci-framework"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View scoring rubric on GitHub
-          </a>
+          <Link href="/framework">View the scoring framework</Link>
         </Button>
       </div>
     </div>
