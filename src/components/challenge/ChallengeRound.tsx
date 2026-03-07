@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -36,14 +36,6 @@ export default function ChallengeRound({
   >(null);
 
   const [showErrors, setShowErrors] = useState(false);
-
-  // Reset state when passage changes (defensive — component also remounts via key)
-  useEffect(() => {
-    setSliderValue(0);
-    setHasMoved(false);
-    setConfidence(null);
-    setShowErrors(false);
-  }, [passage.id]);
 
   const dimension = DIMENSIONS.find((d) => d.key === passage.dimension);
 

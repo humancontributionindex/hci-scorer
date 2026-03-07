@@ -37,9 +37,6 @@ interface DimensionSummary {
 function useStaggeredReveal(count: number, delayMs = 120) {
   const [visibleCount, setVisibleCount] = useState(0);
   useEffect(() => {
-    setVisibleCount(0);
-  }, [count]);
-  useEffect(() => {
     if (visibleCount < count) {
       const timer = setTimeout(() => setVisibleCount((c) => c + 1), delayMs);
       return () => clearTimeout(timer);
