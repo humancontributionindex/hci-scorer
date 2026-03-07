@@ -38,6 +38,9 @@ export default function ChallengeRound({
   const [showErrors, setShowErrors] = useState(false);
 
   const dimension = DIMENSIONS.find((d) => d.key === passage.dimension);
+  if (!dimension) {
+    console.warn(`[ChallengeRound] Unknown dimension: ${passage.dimension}`, passage);
+  }
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSliderValue(Number(e.target.value));
@@ -114,9 +117,10 @@ export default function ChallengeRound({
 
           {/* Clickable track overlay for first interaction — appears when thumb is hidden */}
           {!hasMoved && (
-            <button
-              type="button"
-              onClick={(e) => {
+            <div
+              role="presentation"
+              aria-hidden="true"
+              onPointerDown={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const pct = Math.round(Math.min(100, Math.max(0, (x / rect.width) * 100)));
@@ -124,7 +128,6 @@ export default function ChallengeRound({
                 setHasMoved(true);
               }}
               className="absolute inset-0 z-20 cursor-pointer"
-              aria-label="Click to place your score"
             />
           )}
 

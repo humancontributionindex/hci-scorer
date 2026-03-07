@@ -280,10 +280,12 @@ export default function ChallengeProfile({
               const strongest = summaries.length > 0
                 ? summaries.reduce((a, b) => (a.userAvg > b.userAvg ? a : b))
                 : null;
-              const dir = mostDivergent
-                ? mostDivergent.userAvg < mostDivergent.aiAvg ? "tougher" : mostDivergent.userAvg > mostDivergent.aiAvg ? "softer" : "aligned"
+              const dirPhrase = mostDivergent
+                ? mostDivergent.userAvg < mostDivergent.aiAvg ? `tougher than AI on ${mostDivergent.name.toLowerCase()}`
+                  : mostDivergent.userAvg > mostDivergent.aiAvg ? `softer than AI on ${mostDivergent.name.toLowerCase()}`
+                  : "aligned with AI"
                 : "";
-              const text = `I took the HCI Challenge \u2014 I'm a ${strongest?.name ?? "research"} hawk, ${dir} than AI on ${mostDivergent?.name?.toLowerCase() ?? "key dimensions"}. Test your research instinct: humancontributionindex.com/challenge`;
+              const text = `I took the HCI Challenge \u2014 I'm a ${strongest?.name ?? "research"} hawk, ${dirPhrase}. Test your research instinct: humancontributionindex.com/challenge`;
               window.open(
                 `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`,
                 "_blank",
