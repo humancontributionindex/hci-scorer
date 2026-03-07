@@ -52,7 +52,12 @@ export default function ChallengeHook({
           Pick your field.
         </p>
 
-        <div className="flex flex-wrap gap-2">
+        <div
+          className="flex flex-wrap gap-2"
+          role="group"
+          aria-label="Pick your field"
+          aria-describedby={showError && !field ? "field-error" : undefined}
+        >
           {FIELD_OPTIONS.map((opt) => (
             <button
               key={opt}
@@ -72,7 +77,7 @@ export default function ChallengeHook({
           ))}
         </div>
         {showError && !field && (
-          <p className="font-sans text-xs text-destructive mt-2" role="alert">
+          <p id="field-error" className="font-sans text-xs text-destructive mt-2" role="alert">
             Select a field to continue.
           </p>
         )}

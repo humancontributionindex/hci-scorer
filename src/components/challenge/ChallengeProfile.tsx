@@ -37,6 +37,9 @@ interface DimensionSummary {
 function useStaggeredReveal(count: number, delayMs = 120) {
   const [visibleCount, setVisibleCount] = useState(0);
   useEffect(() => {
+    setVisibleCount(0);
+  }, [count]);
+  useEffect(() => {
     if (visibleCount < count) {
       const timer = setTimeout(() => setVisibleCount((c) => c + 1), delayMs);
       return () => clearTimeout(timer);
@@ -242,10 +245,12 @@ export default function ChallengeProfile({
                     }}
                     placeholder="e.g. MethodsHawk"
                     maxLength={20}
+                    aria-invalid={Boolean(nameError)}
+                    aria-describedby={nameError ? "leaderboard-name-error" : undefined}
                     className="font-sans text-sm px-3 py-2 border border-border rounded bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50 w-52"
                   />
                   {nameError && (
-                    <p className="font-sans text-xs text-destructive mt-1" role="alert">
+                    <p id="leaderboard-name-error" className="font-sans text-xs text-destructive mt-1" role="alert">
                       {nameError}
                     </p>
                   )}
@@ -279,7 +284,7 @@ export default function ChallengeProfile({
                 ? summaries.reduce((a, b) => (a.userAvg > b.userAvg ? a : b))
                 : null;
               const dir = mostDivergent
-                ? mostDivergent.userAvg < mostDivergent.aiAvg ? "tougher" : "softer"
+                ? mostDivergent.userAvg < mostDivergent.aiAvg ? "tougher" : mostDivergent.userAvg > mostDivergent.aiAvg ? "softer" : "aligned"
                 : "";
               const text = `I took the HCI Challenge \u2014 I'm a ${strongest?.name ?? "research"} hawk, ${dir} than AI on ${mostDivergent?.name?.toLowerCase() ?? "key dimensions"}. Test your research instinct: humancontributionindex.com/challenge`;
               window.open(
@@ -398,7 +403,7 @@ export default function ChallengeProfile({
           Keep going
         </Button>
         <Button variant="outline" className="border-foreground hover:bg-secondary" asChild>
-          <Link href="/">{"Score your own research \u2192"}</Link>
+          <Link href="/framework">{"Score your own research \u2192"}</Link>
         </Button>
       </div>
     </div>
