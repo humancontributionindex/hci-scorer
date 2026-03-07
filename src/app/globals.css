@@ -47,3 +47,60 @@
     text-decoration: none;
   }
 }
+
+/* Challenge slider — custom range input styling */
+.challenge-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.challenge-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  background: hsl(var(--muted));
+  border-radius: 9999px;
+}
+
+.challenge-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: hsl(var(--foreground));
+  margin-top: -8px;
+  cursor: grab;
+  transition: transform 0.1s ease;
+}
+
+.challenge-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+}
+
+.challenge-slider::-moz-range-track {
+  height: 8px;
+  background: hsl(var(--muted));
+  border-radius: 9999px;
+  border: none;
+}
+
+.challenge-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: hsl(var(--foreground));
+  border: none;
+  cursor: grab;
+}
+
+.challenge-slider--hidden-thumb::-webkit-slider-thumb {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.challenge-slider--hidden-thumb::-moz-range-thumb {
+  opacity: 0;
+  pointer-events: none;
+}
