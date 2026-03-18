@@ -10,7 +10,7 @@ export default function EmailCapture() {
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!email.includes("@") || submitting) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || submitting) return;
     setSubmitting(true);
     try {
       await fetch("/api/waitlist", {

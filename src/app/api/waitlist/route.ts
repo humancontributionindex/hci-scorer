@@ -5,10 +5,11 @@ export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (
       !email ||
       typeof email !== "string" ||
-      !email.includes("@") ||
+      !EMAIL_RE.test(email) ||
       email.length > 320
     ) {
       return NextResponse.json(

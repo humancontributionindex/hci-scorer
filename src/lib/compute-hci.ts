@@ -38,15 +38,38 @@ export function computeHCI(
   };
 }
 
-export function confidenceLabel(
-  conf: "low" | "moderate" | "high"
-): ConfidenceInfo {
-  if (conf === "high")
+export function computeMidpoint(
+  dimensions: Record<string, { score?: number | null }>
+): number | null {
+  let weightedSum = 0;
+  let totalWeight = 0;
+  let assessedCount = 0;
+
+  for (const dim of DIMENSIONS) {
+    const d = dimensions[dim.key];
+    if (d && d.score != null) {
+      const numScore =
+        typeof d.score === "string" ? parseFloat(d.score as string) : d.score;
+      if (!isNaN(numScore)) {
+        weightedSum += numScore * dim.weight;
+        totalWeight += dim.weight;
+        assessedCount++;
+      }
+    }
+  }
+
+  if (assessedCount < 1 || totalWeight === 0) return null;
+  return Math.round((weightedSum / totalWeight) * 100) / 100;
+}
+
+export function confidenceLabel(conf: string): ConfidenceInfo {
+  const normalized = conf?.toLowerCase?.() ?? "";
+  if (normalized === "high")
     return {
       text: "High confidence",
       desc: "Most dimensions assessable from this text",
     };
-  if (conf === "moderate")
+  if (normalized === "moderate")
     return {
       text: "Moderate confidence",
       desc: "Some dimensions partially assessable",

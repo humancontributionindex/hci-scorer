@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
-import { DIMENSIONS } from "@/lib/constants";
+import { computeMidpoint } from "@/lib/compute-hci";
 import { getSupabase } from "@/lib/supabase";
 
 const rateLimitMap = new Map<string, number[]>();
@@ -12,9 +12,16 @@ function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const timestamps = rateLimitMap.get(ip) || [];
   const recent = timestamps.filter((t) => now - t < WINDOW_MS);
-  if (recent.length >= MAX_REQUESTS) return true;
-  recent.push(now);
-  rateLimitMap.set(ip, recent);
+  if (recent.length >= MAX_REQUESTS) {
+    rateLimitMap.set(ip, recent);
+    return true;
+  }
+  if (recent.length === 0) {
+    rateLimitMap.delete(ip);
+  } else {
+    recent.push(now);
+    rateLimitMap.set(ip, recent);
+  }
   return false;
 }
 
@@ -72,22 +79,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Compute HCI midpoint for storage
-    let hciScore: number | null = null;
     const dims = parsed.dimensions;
-    if (dims) {
-      let weightedSum = 0;
-      let totalWeight = 0;
-      for (const dim of DIMENSIONS) {
-        const d = dims[dim.key];
-        if (d && d.score !== null && d.score !== undefined) {
-          weightedSum += d.score * dim.weight;
-          totalWeight += dim.weight;
-        }
-      }
-      if (totalWeight > 0) {
-        hciScore = Math.round((weightedSum / totalWeight) * 100) / 100;
-      }
-    }
+    const hciScore = dims ? computeMidpoint(dims) : null;
 
     // Save assessment to DB (fire-and-forget)
     getSupabase()

@@ -65,12 +65,15 @@ export default function InputView({
         </p>
         <Textarea
           id="research-text"
+          aria-describedby="char-count"
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
           className="min-h-[200px] font-serif text-base leading-[1.7] resize-y"
           placeholder="Paste your text here..."
         />
         <p
+          id="char-count"
+          aria-live="polite"
           className={cn(
             "font-sans text-xs text-right mt-1 min-h-[1.2em]",
             isShort ? "text-destructive" : "text-muted-foreground"
@@ -97,7 +100,7 @@ export default function InputView({
           <Link href="/framework">View the scoring framework</Link>
         </Button>
         {error && (
-          <p className="font-sans text-sm text-destructive mt-3 sm:self-center">{error}</p>
+          <p role="alert" className="font-sans text-sm text-destructive mt-3 sm:self-center">{error}</p>
         )}
       </div>
 
