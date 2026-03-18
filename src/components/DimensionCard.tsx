@@ -13,7 +13,10 @@ export default function DimensionCard({
   isLast,
 }: DimensionCardProps) {
   const scored = result.score !== null;
-  const anchorText = scored ? dimension.anchors[result.score!] : null;
+  const anchorText =
+    scored && result.score! >= 1 && result.score! <= 5
+      ? dimension.anchors[result.score!]
+      : null;
 
   return (
     <div className={cn("py-5", !isLast && "border-b border-border")}>
