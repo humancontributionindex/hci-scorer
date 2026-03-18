@@ -42,6 +42,11 @@ firebase-debug.log
 # claude
 .claude/
 
+# deprecated challenge feature (kept locally)
+src/app/challenge/
+src/components/challenge/
+src/lib/challenge-data.ts
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
