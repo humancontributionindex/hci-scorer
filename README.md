@@ -3,8 +3,8 @@
 <h1 align="center">HCI Scorer</h1>
 
 <p align="center">
-  <strong>Evaluate authentic human intellectual contribution in research.</strong><br/>
-  A free, open-source web tool implementing the <a href="https://github.com/humancontributionindex/hci-framework">Human Contribution Index (HCI) v1.0</a> framework.
+  <strong>Evaluate scholarly agency in research.</strong><br/>
+  A free, open-source web tool implementing the <a href="https://github.com/humancontributionindex/hci-framework">Human Contribution Index (HCI) 0.2.0</a> framework.
 </p>
 
 <p align="center">
@@ -15,7 +15,7 @@
 
 ## What is the HCI?
 
-The **Human Contribution Index** is an open-source scoring framework that measures the depth of genuine human intellectual contribution in academic and research writing. In an era of AI-assisted authorship, the HCI provides a structured, transparent rubric for distinguishing authentic human thought from machine-generated content.
+The **Human Contribution Index** is an open-source scoring framework that measures scholarly agency in academic and research writing. In an era of AI-assisted authorship, the HCI provides a structured, transparent rubric for evaluating the depth of human intellectual engagement — the researcher's demonstrated capacity to be the architect of their own thinking.
 
 Paste a fragment of research text and the scorer analyzes it across **five weighted dimensions**, returning a scored assessment with evidence, confidence level, and a ready-to-cite block.
 
@@ -23,13 +23,13 @@ Paste a fragment of research text and the scorer analyzes it across **five weigh
 
 | Dimension | Weight | What it measures |
 |---|:---:|---|
-| **Conceptual Direction** | 25% | Problem framing, research questions, intellectual agenda-setting |
-| **Creative Synthesis** | 25% | Cross-domain connections, emergent insights, novel integration |
-| **Critical Judgment** | 20% | Metacognition, epistemic humility, engagement with alternatives |
-| **Ethical Reasoning** | 15% | Moral engagement, stakeholder consideration, responsibility |
-| **Scholarly Voice** | 15% | Authorial presence, intellectual ownership, authentic perspective |
+| **Epistemic Agency** | 35% | Identifying research gaps, formulating questions, directing inquiry |
+| **Cognitive Transformation** | 25% | Evolving thinking, triangulating evidence, grappling with contradictions |
+| **Methodological Autonomy** | 20% | Design justification, novel frameworks, critical methods discussion |
+| **Original Synthesis** | 15% | New models, cross-theory integration, arguments greater than sum of parts |
+| **Metacognitive Oversight** | 5% | Limitations awareness, process transparency, reflective learning |
 
-Each dimension is scored **1 -- 5** using anchor-based rubrics. The final HCI is a weighted composite expressed as a range (e.g., 3.2 -- 3.8 / 5.0) along with a confidence level (low / moderate / high) based on how many dimensions were assessable from the text.
+Each dimension is scored **1 -- 5** using anchor-based rubrics. The final HCI is a weighted composite on a **0 -- 100** scale, classified into one of three agency tiers (High Agency / Hybrid / Low Agency), along with a confidence level (low / moderate / high) based on how many dimensions were assessable from the text.
 
 ## Features
 
@@ -180,11 +180,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 1. The user pastes research text (min. 500 chars, max. 50,000 chars) and optionally provides a reflection describing their intellectual decisions.
 2. The text is sent to **Gemini 2.5 Flash** with a structured system prompt encoding the full HCI rubric.
 3. Gemini returns a JSON response with per-dimension scores (1--5 or `null`), evidence, and not-assessable notes.
-4. The client computes a **weighted composite score** with a confidence margin:
-   - Fewer than 4 dimensions assessed: &plusmn; 0.5
-   - 4 dimensions assessed: &plusmn; 0.3
-   - All 5 dimensions assessed: &plusmn; 0.2
-5. Results are displayed with the score range, confidence level, dimension breakdown, and a citable block.
+4. The client computes a **weighted composite score** on a 0--100 scale:
+   - Fewer than 4 dimensions assessed: &plusmn; 10 points
+   - 4 dimensions assessed: &plusmn; 6 points
+   - All 5 dimensions assessed: &plusmn; 4 points
+5. Results display the score, a three-tier classification (High Agency / Hybrid / Low Agency), confidence level, and dimension breakdown.
 
 A minimum of 2 assessed dimensions is required to produce a score.
 
@@ -203,7 +203,7 @@ Runs the HCI assessment on submitted text.
 }
 ```
 
-**Response:** `AssessmentResponse` object with dimension scores, evidence, overall note, and confidence level.
+**Response:** `AssessmentResponse` object with dimension scores (1--5), evidence, overall note, and confidence level. The client computes the 0--100 composite score and tier classification.
 
 **Rate limit:** 5 requests per minute per IP.
 
@@ -248,6 +248,6 @@ This project is released under the [MIT License](https://opensource.org/licenses
 ---
 
 <p align="center">
-  <strong>Human Contribution Index v1.0</strong><br/>
+  <strong>Human Contribution Index 0.2.0</strong><br/>
   <em>Because human thought still matters.</em>
 </p>

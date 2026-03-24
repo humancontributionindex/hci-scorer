@@ -17,11 +17,11 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: "HCI Scorer — Human Contribution Index",
   description:
-    "A free, open-source tool for evaluating authentic human intellectual contribution in research. Paste text, get a preliminary HCI assessment, cite it.",
+    "A free, open-source tool for evaluating scholarly agency in research. Paste text, get a preliminary HCI assessment, cite it.",
   openGraph: {
     title: "HCI Scorer — Human Contribution Index",
     description:
-      "Evaluate authentic human intellectual contribution in research.",
+      "Evaluate scholarly agency in research.",
     url: "https://humancontributionindex.com",
     type: "website",
   },

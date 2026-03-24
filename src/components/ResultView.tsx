@@ -11,6 +11,7 @@ import EmailCapture from "./EmailCapture";
 import FeedbackCapture from "./FeedbackCapture";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 interface ResultViewProps {
   result: AssessmentResponse;
@@ -34,20 +35,35 @@ export default function ResultView({
         </h2>
         {hci ? (
           <>
-            <div className="flex items-baseline gap-2 mb-3">
+            <div className="flex items-baseline gap-2 mb-1">
               <span className="text-4xl font-semibold text-foreground max-[480px]:text-[1.75rem]">
-                {hci.low}&ndash;{hci.high}
+                {hci.score}
               </span>
-              <span className="text-xl text-muted-foreground">/5.0</span>
+              <span className="text-xl text-muted-foreground">/ 100</span>
             </div>
+            <div className="mb-3">
+              <span
+                className={cn(
+                  "inline-block font-sans text-sm font-semibold px-2.5 py-0.5 rounded-full",
+                  hci.tier === "high" && "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+                  hci.tier === "hybrid" && "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+                  hci.tier === "low" && "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                )}
+              >
+                {hci.tierLabel}
+              </span>
+            </div>
+            <p className="font-sans text-sm text-muted-foreground mb-1">
+              {hci.tierDescription}
+            </p>
             {confidence && (
               <p className="font-sans text-sm text-muted-foreground mb-1">
                 {confidence.text} &mdash; {confidence.desc}
               </p>
             )}
             <p className="font-sans text-sm text-muted-foreground mb-4">
-              {hci.assessed} of {hci.total} dimensions assessed from this
-              fragment
+              {hci.assessed} of {hci.total} dimensions assessed
+              {hci.assessed < hci.total && ` (confidence range: ${hci.low}\u2013${hci.high})`}
             </p>
           </>
         ) : (

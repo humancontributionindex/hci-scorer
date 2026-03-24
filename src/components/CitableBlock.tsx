@@ -12,7 +12,7 @@ interface CitableBlockProps {
 export default function CitableBlock({ hci, result }: CitableBlockProps) {
   const [copied, setCopied] = useState(false);
 
-  const citableText = `This work received a preliminary HCI assessment using the Human Contribution Index v1.0 (fragment-level analysis). Estimated HCI: ${hci.low}\u2013${hci.high}/5.0 (${hci.assessed} of ${hci.total} dimensions assessed, ${result.confidence} confidence). The HCI is an open-source framework for evaluating authentic human intellectual contribution in research (Macario, Casadio & Chan, 2026). Methodology and scoring rubric: humancontributionindex.com`;
+  const citableText = `This work received a preliminary HCI assessment using the Human Contribution Index (HCI 0.2.0, fragment-level analysis). HCI Score: ${hci.score}/100 \u2014 ${hci.tierLabel} (${hci.assessed} of ${hci.total} dimensions assessed, ${result.confidence} confidence). The HCI is an open-source framework for evaluating scholarly agency in research (Macario, Casadio & Chan, 2026). Methodology and scoring rubric: humancontributionindex.com`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(citableText).then(() => {

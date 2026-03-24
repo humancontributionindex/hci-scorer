@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
-import { computeMidpoint } from "@/lib/compute-hci";
+import { DIMENSIONS } from "@/lib/constants";
 import { getSupabase } from "@/lib/supabase";
 
 const rateLimitMap = new Map<string, number[]>();
@@ -78,23 +78,51 @@ export async function POST(request: NextRequest) {
       parsed = JSON.parse(cleaned);
     }
 
-    // Compute HCI midpoint for storage
+    // Compute HCI score on 0–100 scale
     const dims = parsed.dimensions;
-    const hciScore = dims ? computeMidpoint(dims) : null;
+    let hciScore: number | null = null;
+    if (dims) {
+      let weightedSum = 0;
+      let totalWeight = 0;
+      for (const dim of DIMENSIONS) {
+        const d = dims[dim.key];
+        if (d && d.score != null) {
+          const numScore =
+            typeof d.score === "string" ? parseFloat(d.score) : d.score;
+          if (!isNaN(numScore)) {
+            weightedSum += numScore * dim.weight;
+            totalWeight += dim.weight;
+          }
+        }
+      }
+      if (totalWeight > 0) {
+        const normalized = weightedSum / totalWeight;
+        hciScore = Math.round(normalized * 20);
+      }
+    }
 
     // Save assessment to DB (fire-and-forget)
     getSupabase()
       .from("assessments")
       .insert({
         research_field: researchField.trim().slice(0, 200),
-        conceptual_direction: dims?.conceptual_direction?.score ?? null,
-        creative_synthesis: dims?.creative_synthesis?.score ?? null,
-        critical_judgment: dims?.critical_judgment?.score ?? null,
-        ethical_reasoning: dims?.ethical_reasoning?.score ?? null,
-        scholarly_voice: dims?.scholarly_voice?.score ?? null,
+        epistemic_agency: dims?.epistemic_agency?.score ?? null,
+        cognitive_transformation: dims?.cognitive_transformation?.score ?? null,
+        methodological_autonomy: dims?.methodological_autonomy?.score ?? null,
+        original_synthesis: dims?.original_synthesis?.score ?? null,
+        metacognitive_oversight: dims?.metacognitive_oversight?.score ?? null,
         hci_score: hciScore,
+        agency_tier:
+          hciScore !== null
+            ? hciScore >= 80
+              ? "high"
+              : hciScore >= 60
+                ? "hybrid"
+                : "low"
+            : null,
         confidence: parsed.confidence ?? null,
         overall_note: parsed.overall_note ?? null,
+        scoring_version: 2,
       })
       .then(({ error: insertError }) => {
         if (insertError) console.error("Assessment insert failed:", insertError);
