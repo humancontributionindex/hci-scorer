@@ -97,7 +97,7 @@ export default function FrameworkPage() {
           <p className="text-base leading-[1.7] text-foreground">
             Each dimension is scored on a 1&ndash;5 scale using the anchor
             descriptors below. The composite HCI score is a weighted average of
-            all dimensions, scaled to 0&ndash;100.
+            assessable dimensions, scaled to 0&ndash;100.
           </p>
         </section>
 
@@ -125,8 +125,8 @@ export default function FrameworkPage() {
             </p>
           </div>
           <p className="text-sm leading-relaxed text-foreground mt-4">
-            The HCI is a weighted sum of five dimension scores, scaled to
-            0&ndash;100. The result is classified into one of three agency tiers.
+            The HCI is a weighted average of assessable dimension scores, scaled
+            to 0&ndash;100. The result is classified into one of three agency tiers.
           </p>
         </section>
 

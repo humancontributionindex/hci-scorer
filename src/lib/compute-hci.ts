@@ -20,7 +20,7 @@ export function computeScore100(
     if (d && d.score != null) {
       const numScore =
         typeof d.score === "string" ? parseFloat(d.score as string) : d.score;
-      if (!isNaN(numScore)) {
+      if (Number.isFinite(numScore) && numScore >= 1 && numScore <= 5) {
         weightedSum += numScore * dim.weight;
         totalWeight += dim.weight;
         assessedCount++;
