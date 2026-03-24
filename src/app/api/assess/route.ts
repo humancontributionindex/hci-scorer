@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
-import { DIMENSIONS } from "@/lib/constants";
+import { classifyAgency } from "@/lib/constants";
+import { computeScore100 } from "@/lib/compute-hci";
 import { getSupabase } from "@/lib/supabase";
 
 const rateLimitMap = new Map<string, number[]>();
@@ -78,28 +79,10 @@ export async function POST(request: NextRequest) {
       parsed = JSON.parse(cleaned);
     }
 
-    // Compute HCI score on 0–100 scale
+    // Compute HCI score on 0–100 scale (shared logic, min 1 dimension for DB storage)
     const dims = parsed.dimensions;
-    let hciScore: number | null = null;
-    if (dims) {
-      let weightedSum = 0;
-      let totalWeight = 0;
-      for (const dim of DIMENSIONS) {
-        const d = dims[dim.key];
-        if (d && d.score != null) {
-          const numScore =
-            typeof d.score === "string" ? parseFloat(d.score) : d.score;
-          if (!isNaN(numScore)) {
-            weightedSum += numScore * dim.weight;
-            totalWeight += dim.weight;
-          }
-        }
-      }
-      if (totalWeight > 0) {
-        const normalized = weightedSum / totalWeight;
-        hciScore = Math.round(normalized * 20);
-      }
-    }
+    const hciScore = dims ? computeScore100(dims) : null;
+    const tier = hciScore !== null ? classifyAgency(hciScore) : null;
 
     // Save assessment to DB (fire-and-forget)
     getSupabase()
@@ -112,14 +95,7 @@ export async function POST(request: NextRequest) {
         original_synthesis: dims?.original_synthesis?.score ?? null,
         metacognitive_oversight: dims?.metacognitive_oversight?.score ?? null,
         hci_score: hciScore,
-        agency_tier:
-          hciScore !== null
-            ? hciScore >= 80
-              ? "high"
-              : hciScore >= 60
-                ? "hybrid"
-                : "low"
-            : null,
+        agency_tier: tier?.tier ?? null,
         confidence: parsed.confidence ?? null,
         overall_note: parsed.overall_note ?? null,
         scoring_version: 2,
