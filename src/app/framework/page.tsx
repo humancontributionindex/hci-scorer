@@ -6,29 +6,29 @@ import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "The HCI Framework — Human Contribution Index Scoring Rubric",
+  title: "The HCI Framework — Scholarly Agency Scoring Rubric (0.2.0)",
   description:
-    "A structured rubric for measuring authentic human intellectual contribution in research. Five dimensions, weighted scoring, and detailed anchor descriptors for academics, reviewers, and publishers.",
+    "A structured rubric for measuring scholarly agency in research. Five dimensions of human contribution, weighted scoring, and a three-tier classification system for academics, reviewers, and publishers.",
   openGraph: {
-    title: "The HCI Framework — Human Contribution Index Scoring Rubric",
+    title: "The HCI Framework — Scholarly Agency Scoring Rubric (0.2.0)",
     description:
-      "A structured rubric for measuring authentic human intellectual contribution in research.",
+      "A structured rubric for measuring scholarly agency in research.",
     url: "https://humancontributionindex.com/framework",
     type: "website",
   },
 };
 
 const DIMENSION_MEASURES: Record<string, string> = {
-  conceptual_direction:
-    "Did the researcher identify the problem, frame the questions, and direct the inquiry?",
-  creative_synthesis:
-    "Are the connections and insights non-obvious? Do they draw on cross-domain expertise?",
-  critical_judgment:
-    "Did the researcher evaluate alternatives, weigh evidence, and acknowledge limitations?",
-  ethical_reasoning:
-    "Did the researcher navigate ethical considerations and take responsibility for impact?",
-  scholarly_voice:
-    "Is there a distinctive intellectual perspective and authentic argumentation?",
+  epistemic_agency:
+    "Did the researcher identify a meaningful gap, formulate original questions, and direct the inquiry?",
+  cognitive_transformation:
+    "Does the author\u2019s thinking evolve? Is there triangulation of evidence and grappling with contradictions?",
+  methodological_autonomy:
+    "Did the researcher justify their design, critically evaluate alternatives, and discuss trade-offs?",
+  original_synthesis:
+    "Are there new conceptual models or cross-theory integrations that transcend the individual sources?",
+  metacognitive_oversight:
+    "Is there an honest, reflective account of limitations and the research learning journey?",
 };
 
 const WEIGHTS_TABLE = DIMENSIONS.map((dim) => ({
@@ -37,75 +37,28 @@ const WEIGHTS_TABLE = DIMENSIONS.map((dim) => ({
   measures: DIMENSION_MEASURES[dim.key],
 }));
 
-const AI_DEPENDENCY_TABLE: {
-  range: string;
-  level: string;
-  examples: string;
-}[] = [
-  {
-    range: "0.0\u20130.2",
-    level: "Minimal",
-    examples: "Spell-check, formatting, grammar tools",
-  },
-  {
-    range: "0.2\u20130.4",
-    level: "Moderate",
-    examples:
-      "Literature search assistance, data cleaning, reference management",
-  },
-  {
-    range: "0.4\u20130.6",
-    level: "Substantial",
-    examples:
-      "AI-assisted drafting with significant human revision; AI-supported analysis with human interpretation",
-  },
-  {
-    range: "0.6\u20130.8",
-    level: "Heavy",
-    examples:
-      "AI-generated sections with minor editing; AI-driven analysis with minimal human oversight",
-  },
-  {
-    range: "0.8\u20131.0",
-    level: "Dominant",
-    examples: "Predominantly AI-written with cosmetic human edits",
-  },
-];
-
 const SCORE_INTERPRETATION: {
   range: string;
   label: string;
   description: string;
 }[] = [
   {
-    range: "4.0\u20135.0",
-    label: "Exceptional",
+    range: "80\u2013100",
+    label: "High Agency",
     description:
-      "Strong evidence of authentic human intellectual engagement across all dimensions",
+      "The human author is clearly the intellectual architect of the work.",
   },
   {
-    range: "3.0\u20134.0",
-    label: "Strong",
+    range: "60\u201379",
+    label: "Hybrid",
     description:
-      "Clear evidence of genuine human intellectual contribution",
+      "A mix of human-led inquiry and significant reliance on AI for core intellectual tasks.",
   },
   {
-    range: "2.0\u20133.0",
-    label: "Moderate",
+    range: "Below 60",
+    label: "Low Agency",
     description:
-      "Some dimensions show authentic engagement; others raise questions",
-  },
-  {
-    range: "1.0\u20132.0",
-    label: "Limited",
-    description:
-      "Significant concerns about the depth of human intellectual involvement",
-  },
-  {
-    range: "Below 1.0",
-    label: "Minimal",
-    description:
-      "Heavy AI dependency has substantially diminished the human contribution signal",
+      "The work is likely a product of AI generation with minimal human intellectual contribution.",
   },
 ];
 
@@ -122,7 +75,7 @@ export default function FrameworkPage() {
             The HCI Framework
           </h1>
           <p className="text-lg italic text-muted-foreground leading-relaxed">
-            A rubric for measuring genuine human thinking in research.
+            A rubric for measuring scholarly agency in research.
           </p>
           <hr className="mt-6 border-t-2 border-foreground" />
         </header>
@@ -144,7 +97,7 @@ export default function FrameworkPage() {
           <p className="text-base leading-[1.7] text-foreground">
             Each dimension is scored on a 1&ndash;5 scale using the anchor
             descriptors below. The composite HCI score is a weighted average of
-            all dimensions, adjusted for AI dependency.
+            assessable dimensions, scaled to 0&ndash;100.
           </p>
         </section>
 
@@ -158,7 +111,7 @@ export default function FrameworkPage() {
           <div className="bg-secondary rounded-lg p-5 mb-4 text-center">
             <p className="font-sans text-lg text-foreground tracking-wide">
               HCI = &Sigma;(&lambda;<sub>j</sub> &times; HC<sub>j</sub>)
-              &times; (1 &minus; AI<sup>d</sup>)
+              &times; 20
             </p>
           </div>
           <div className="space-y-2 text-sm leading-relaxed text-foreground">
@@ -170,18 +123,10 @@ export default function FrameworkPage() {
               <strong>&lambda;<sub>j</sub></strong> = weight for dimension{" "}
               <em>j</em> (see below)
             </p>
-            <p>
-              <strong>
-                AI<sup>d</sup>
-              </strong>{" "}
-              = AI dependency factor (0.0&ndash;1.0), reflecting the extent of
-              AI involvement in the research process
-            </p>
           </div>
           <p className="text-sm leading-relaxed text-foreground mt-4">
-            The AI dependency factor acts as a multiplier: work produced entirely
-            by a human (AI<sup>d</sup> = 0) retains its full score, while heavy
-            AI reliance reduces the composite proportionally.
+            The HCI is a weighted average of assessable dimension scores, scaled
+            to 0&ndash;100. The result is classified into one of three agency tiers.
           </p>
         </section>
 
@@ -261,52 +206,6 @@ export default function FrameworkPage() {
               </div>
             </div>
           ))}
-        </section>
-
-        <Separator className="my-8" />
-
-        {/* AI Dependency Factor */}
-        <section className="mb-8">
-          <h2 className="font-sans text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
-            AI Dependency Factor
-          </h2>
-          <p className="text-base leading-[1.7] text-foreground mb-4">
-            The AI dependency factor (AI<sup>d</sup>) captures the extent of AI
-            involvement in the research process. It ranges from 0.0 (no AI
-            involvement) to 1.0 (entirely AI-generated).
-          </p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="font-sans font-semibold text-foreground text-left py-2 pr-4">
-                    AI<sup>d</sup> Range
-                  </th>
-                  <th className="font-sans font-semibold text-foreground text-left py-2 pr-4">
-                    Level
-                  </th>
-                  <th className="font-sans font-semibold text-foreground text-left py-2">
-                    Examples
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {AI_DEPENDENCY_TABLE.map((row) => (
-                  <tr key={row.range} className="border-b border-border/50">
-                    <td className="font-sans text-foreground py-2.5 pr-4 tabular-nums">
-                      {row.range}
-                    </td>
-                    <td className="font-sans font-semibold text-foreground py-2.5 pr-4">
-                      {row.level}
-                    </td>
-                    <td className="text-foreground py-2.5 leading-relaxed">
-                      {row.examples}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </section>
 
         <Separator className="my-8" />

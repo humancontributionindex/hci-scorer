@@ -19,11 +19,14 @@ export interface AssessmentResponse {
 }
 
 export interface HCIScore {
+  score: number;
   low: number;
   high: number;
-  midpoint: number;
   assessed: number;
   total: number;
+  tier: "high" | "hybrid" | "low";
+  tierLabel: string;
+  tierDescription: string;
 }
 
 export interface ConfidenceInfo {

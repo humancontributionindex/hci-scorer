@@ -1,45 +1,15 @@
-import { DIMENSIONS } from "./constants";
+import { DIMENSIONS, classifyAgency } from "./constants";
 import { DimensionResult, HCIScore, ConfidenceInfo } from "./types";
 
-export function computeHCI(
-  dimensions: Record<string, DimensionResult>
-): HCIScore | null {
-  let weightedSum = 0;
-  let totalWeight = 0;
-  let assessedCount = 0;
+const SCALE_FACTOR = 20; // converts 1–5 weighted average to 0–100
 
-  for (const dim of DIMENSIONS) {
-    const result = dimensions[dim.key];
-    if (result && result.score != null) {
-      const numScore =
-        typeof result.score === "string"
-          ? parseFloat(result.score)
-          : result.score;
-      if (!isNaN(numScore)) {
-        weightedSum += numScore * dim.weight;
-        totalWeight += dim.weight;
-        assessedCount++;
-      }
-    }
-  }
-
-  if (assessedCount < 2) return null;
-
-  const normalized = totalWeight > 0 ? weightedSum / totalWeight : 0;
-  const margin =
-    assessedCount < 4 ? 0.5 : assessedCount < 5 ? 0.3 : 0.2;
-
-  return {
-    low: Math.max(1, Math.round((normalized - margin) * 10) / 10),
-    high: Math.min(5, Math.round((normalized + margin) * 10) / 10),
-    midpoint: Math.round(normalized * 100) / 100,
-    assessed: assessedCount,
-    total: 5,
-  };
-}
-
-export function computeMidpoint(
-  dimensions: Record<string, { score?: number | null }>
+/**
+ * Computes a 0–100 score from dimension results.
+ * Returns null if fewer than minAssessed dimensions have scores.
+ */
+export function computeScore100(
+  dimensions: Record<string, { score?: number | null }>,
+  minAssessed = 1
 ): number | null {
   let weightedSum = 0;
   let totalWeight = 0;
@@ -50,7 +20,7 @@ export function computeMidpoint(
     if (d && d.score != null) {
       const numScore =
         typeof d.score === "string" ? parseFloat(d.score as string) : d.score;
-      if (!isNaN(numScore)) {
+      if (Number.isFinite(numScore) && numScore >= 1 && numScore <= 5) {
         weightedSum += numScore * dim.weight;
         totalWeight += dim.weight;
         assessedCount++;
@@ -58,8 +28,44 @@ export function computeMidpoint(
     }
   }
 
-  if (assessedCount < 1 || totalWeight === 0) return null;
-  return Math.round((weightedSum / totalWeight) * 100) / 100;
+  if (assessedCount < minAssessed || totalWeight === 0) return null;
+
+  const normalized = weightedSum / totalWeight;
+  return Math.round(normalized * SCALE_FACTOR);
+}
+
+export function computeHCI(
+  dimensions: Record<string, DimensionResult>
+): HCIScore | null {
+  const score100 = computeScore100(dimensions, 2);
+  if (score100 === null) return null;
+
+  let assessedCount = 0;
+  for (const dim of DIMENSIONS) {
+    const result = dimensions[dim.key];
+    if (result && result.score != null) {
+      const numScore =
+        typeof result.score === "string"
+          ? parseFloat(result.score)
+          : result.score;
+      if (!isNaN(numScore)) assessedCount++;
+    }
+  }
+
+  const margin = assessedCount < 4 ? 10 : assessedCount < 5 ? 6 : 4;
+
+  const classification = classifyAgency(score100);
+
+  return {
+    score: score100,
+    low: Math.max(0, score100 - margin),
+    high: Math.min(100, score100 + margin),
+    assessed: assessedCount,
+    total: 5,
+    tier: classification.tier,
+    tierLabel: classification.label,
+    tierDescription: classification.description,
+  };
 }
 
 export function confidenceLabel(conf: string): ConfidenceInfo {
@@ -76,6 +82,6 @@ export function confidenceLabel(conf: string): ConfidenceInfo {
     };
   return {
     text: "Low confidence",
-    desc: "Limited text — treat as directional only",
+    desc: "Limited text \u2014 treat as directional only",
   };
 }

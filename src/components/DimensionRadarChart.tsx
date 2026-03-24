@@ -21,11 +21,11 @@ interface DimensionRadarChartProps {
 }
 
 const SHORT_NAMES: Record<string, string> = {
-  conceptual_direction: "Conceptual",
-  creative_synthesis: "Creative",
-  critical_judgment: "Critical",
-  ethical_reasoning: "Ethical",
-  scholarly_voice: "Scholarly",
+  epistemic_agency: "Epistemic",
+  cognitive_transformation: "Cognitive",
+  methodological_autonomy: "Methodological",
+  original_synthesis: "Synthesis",
+  metacognitive_oversight: "Metacognitive",
 };
 
 const chartConfig = {

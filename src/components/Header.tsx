@@ -8,8 +8,7 @@ export default function Header() {
         Preliminary HCI Assessment
       </h1>
       <p className="text-lg italic text-muted-foreground leading-relaxed">
-        An open-source framework for evaluating authentic human intellectual
-        contribution in research
+        An open-source framework for evaluating scholarly agency in research
       </p>
       <hr className="mt-6 border-t-2 border-foreground" />
     </header>

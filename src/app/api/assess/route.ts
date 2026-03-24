@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
-import { computeMidpoint } from "@/lib/compute-hci";
+import { classifyAgency } from "@/lib/constants";
+import { computeScore100 } from "@/lib/compute-hci";
 import { getSupabase } from "@/lib/supabase";
 
 const rateLimitMap = new Map<string, number[]>();
@@ -78,23 +79,26 @@ export async function POST(request: NextRequest) {
       parsed = JSON.parse(cleaned);
     }
 
-    // Compute HCI midpoint for storage
+    // Compute HCI score on 0–100 scale (shared logic, min 1 dimension for DB storage)
     const dims = parsed.dimensions;
-    const hciScore = dims ? computeMidpoint(dims) : null;
+    const hciScore = dims ? computeScore100(dims) : null;
+    const tier = hciScore !== null ? classifyAgency(hciScore) : null;
 
     // Save assessment to DB (fire-and-forget)
     getSupabase()
       .from("assessments")
       .insert({
         research_field: researchField.trim().slice(0, 200),
-        conceptual_direction: dims?.conceptual_direction?.score ?? null,
-        creative_synthesis: dims?.creative_synthesis?.score ?? null,
-        critical_judgment: dims?.critical_judgment?.score ?? null,
-        ethical_reasoning: dims?.ethical_reasoning?.score ?? null,
-        scholarly_voice: dims?.scholarly_voice?.score ?? null,
+        epistemic_agency: dims?.epistemic_agency?.score ?? null,
+        cognitive_transformation: dims?.cognitive_transformation?.score ?? null,
+        methodological_autonomy: dims?.methodological_autonomy?.score ?? null,
+        original_synthesis: dims?.original_synthesis?.score ?? null,
+        metacognitive_oversight: dims?.metacognitive_oversight?.score ?? null,
         hci_score: hciScore,
+        agency_tier: tier?.tier ?? null,
         confidence: parsed.confidence ?? null,
         overall_note: parsed.overall_note ?? null,
+        scoring_version: 2,
       })
       .then(({ error: insertError }) => {
         if (insertError) console.error("Assessment insert failed:", insertError);
